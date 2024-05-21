@@ -9,11 +9,15 @@ class ScheduleBottomSheet extends StatefulWidget {
   State<ScheduleBottomSheet> createState() => _ScheduleBottomSheetState();
 }
 
+// 이 위젯은 하단 시트의 레이아웃을 구성합니다.
+// ScheduleBottomSheet 위젯은 일정을 추가하는 데 사용되는 하단 시트입니다.
 class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
+    // 하단 시트는 시작 시간, 종료 시간, 그리고 내용을 입력할 수 있는 CustomTextField 위젯을 포함하고 있습니다.
+    // 하단 시트의 맨 아래에는 'Save' 버튼이 위치하고 있습니다.
     return SafeArea(
       child: Container(
         height: MediaQuery.of(context).size.height / 2 + bottomInset,

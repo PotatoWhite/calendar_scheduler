@@ -1,7 +1,12 @@
 import 'package:calendar_scheduler/const/colors.dart';
 import 'package:flutter/material.dart';
 
+// ScheduleCard 위젯은 일정의 시작 시간, 종료 시간, 그리고 내용을 표시하는 카드입니다.
 class ScheduleCard extends StatelessWidget {
+  // startTime은 일정의 시작 시간을 나타냅니다.
+  // endTime은 일정의 종료 시간을 나타냅니다.
+  // content는 일정의 내용을 나타냅니다.
+
   final int startTime;
   final int endTime;
   final String content;
