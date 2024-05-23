@@ -6,9 +6,14 @@ class CustomTextField extends StatelessWidget {
   final String label;
   final bool isTime;
 
+  final FormFieldSetter<String> onSaved; // onSaved는 입력된 값이 저장될 때 호출되는 콜백 함수입니다.
+  final FormFieldValidator<String> validator; // validator는 입력된 값이 유효한지 검사하는 함수입니다.
+
   const CustomTextField({
     required this.label,
     required this.isTime,
+    required this.onSaved,
+    required this.validator,
     super.key,
   });
 
@@ -27,6 +32,10 @@ class CustomTextField extends StatelessWidget {
         Expanded(
           flex: isTime ? 0 : 1,
           child: TextFormField(
+            // onSaved : 입력된 값이 저장될 때 호출되는 콜백 함수입니다.
+            onSaved: onSaved,
+            // validator : 입력된 값이 유효한지 검사하는 함수입니다.
+            validator: validator,
             cursorColor: Colors.grey,
             maxLines: isTime ? 1 : null,
             expands: !isTime,

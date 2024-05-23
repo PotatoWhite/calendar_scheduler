@@ -20,7 +20,8 @@ class MainCalendar extends StatelessWidget {
     return TableCalendar(
       locale: 'ko_kr',
       onDaySelected: onDaySelected,
-      selectedDayPredicate: (date) => date.year == selectedDate.year && selectedDate.month == date.month && selectedDate.day == date.day,
+      selectedDayPredicate: (date) => // ➍ 선택된 날짜를 구분할 로직
+          date.year == selectedDate.year && date.month == selectedDate.month && date.day == selectedDate.day,
       lastDay: DateTime(3000, 1, 1),
       firstDay: DateTime(1800, 1, 1),
       focusedDay: DateTime.now(),
@@ -32,7 +33,7 @@ class MainCalendar extends StatelessWidget {
             fontSize: 16.0,
           )),
       calendarStyle: CalendarStyle(
-        isTodayHighlighted: true,
+        isTodayHighlighted: false,
         defaultDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6.0),
           color: LIGHT_GREY_COLOR,

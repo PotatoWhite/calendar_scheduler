@@ -2,9 +2,11 @@ import 'package:calendar_scheduler/component/main_calendar.dart';
 import 'package:calendar_scheduler/component/schedule_bottom_sheet.dart';
 import 'package:calendar_scheduler/const/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import '../component/schedule_card.dart';
 import '../component/today_banner.dart';
+import '../database/drift_database.dart';
 
 // HomeScreen 위젯은 앱의 홈 화면을 구성합니다.
 class HomeScreen extends StatefulWidget {
@@ -34,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
             showModalBottomSheet(
               context: context,
               isDismissible: true,
-              builder: (_) => const ScheduleBottomSheet(),
+              builder: (_) => ScheduleBottomSheet(
+                selectedDate: selectedDate, // 선택된 날짜를 ScheduleBottomSheet 위젯에 전달합니다.
+              ),
               isScrollControlled: true,
             );
           },
@@ -48,14 +52,50 @@ class _HomeScreenState extends State<HomeScreen> {
                 onDaySelected: onDaySelected,
               ),
               const SizedBox(height: 16.0),
-              TodayBanner(
-                selectedDate: selectedDate,
-                count: 0,
-              ),
-              const ScheduleCard(
-                startTime: 12,
-                endTime: 14,
-                content: 'Meeting with client',
+              // StreamBuilder는 스트림의 데이터를 수신하고 UI를 업데이트합니다.
+              StreamBuilder<List<Schedule>>(
+                  stream: GetIt.I.get<LocalDatabase>().watchSchedules(selectedDate),
+                  builder: (c, snapshot) {
+                    return TodayBanner(
+                      selectedDate: selectedDate,
+                      count: snapshot.data?.length ?? 0,
+                    );
+                  }),
+              const SizedBox(height: 8.0),
+              Expanded(
+                // StreamBuilder는 스트림의 데이터를 수신하고 UI를 업데이트합니다.
+                child: StreamBuilder<List<Schedule>>(
+                  stream: GetIt.I<LocalDatabase>().watchSchedules(selectedDate),
+                  builder: (c, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Container();
+                    }
+
+                    // snapshot.data는 선택된 날짜의 일정 목록을 나타냅니다.
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (c, i) {
+                        final schedule = snapshot.data![i];
+                        // Dismissible 위젯은 사용자가 스와이프하여 항목을 삭제할 수 있도록 합니다.
+                        return Dismissible(
+                          key: ValueKey(schedule.id),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (_) {
+                            GetIt.I<LocalDatabase>().removeSchedule(schedule.id);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0, left: 8.0, right: 8.0),
+                            child: ScheduleCard(
+                              startTime: schedule.startTime,
+                              endTime: schedule.endTime,
+                              content: schedule.content,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -66,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // 이 메서드는 선택된 날짜를 상태로 저장합니다.
   void onDaySelected(DateTime selectedDate, DateTime focusedDate) {
     setState(() {
-      selectedDate = selectedDate;
+      this.selectedDate = selectedDate;
     });
   }
 }
