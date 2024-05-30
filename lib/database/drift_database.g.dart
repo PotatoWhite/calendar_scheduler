@@ -172,7 +172,7 @@ class Schedule extends DataClass implements Insertable<Schedule> {
 
 class SchedulesCompanion extends UpdateCompanion<Schedule> {
   final Value<int> id;
-  final Value<String> content;
+  final Value<String> content; 
   final Value<DateTime> date;
   final Value<int> startTime;
   final Value<int> endTime;
