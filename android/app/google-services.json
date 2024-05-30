@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "341759131417",
+    "project_id": "calendar-scheduler-e4c84",
+    "storage_bucket": "calendar-scheduler-e4c84.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341759131417:android:67a1364a113a36bb300f88",
+        "android_client_info": {
+          "package_name": "me.potato.calendar_scheduler"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8vvAs_fTcsYYsfUt7120sfck1DGqp_2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
