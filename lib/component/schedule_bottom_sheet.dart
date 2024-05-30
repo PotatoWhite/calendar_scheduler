@@ -1,9 +1,10 @@
 import 'package:calendar_scheduler/component/custom_text_field.dart';
 import 'package:calendar_scheduler/const/colors.dart';
-import 'package:calendar_scheduler/database/drift_database.dart';
-import 'package:drift/drift.dart' hide Column; // Column 이름이 충돌하기 때문에 Drift 패키지의 Column을 숨깁니다.
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:uuid/uuid.dart';
+
+import '../model/schedule_model.dart';
 
 class ScheduleBottomSheet extends StatefulWidget {
   final DateTime selectedDate;
@@ -102,18 +103,20 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
 
-      await GetIt.I<LocalDatabase>().insertSchedule(
-        SchedulesCompanion(
-          startTime: Value(startTime!),
-          endTime: Value(endTime!),
-          content: Value(content!),
-          date: Value(widget.selectedDate),
-        ),
+      final schedule = ScheduleModel(
+        id: const Uuid().v4(),
+        content: content!,
+        startTime: startTime!,
+        endTime: endTime!,
+        date: widget.selectedDate,
       );
 
-      // 현재 화면을 종료하고 이전 화면으로 돌아갑니다.
-      Navigator.of(context).pop();
+      // 'schedules' 컬렉션에 일정을 json 형태로 add합니다.
+      var documentReference = await FirebaseFirestore.instance.collection('schedules').add(schedule.toJson());
+      debugPrint('documentReference: $documentReference');
     }
+
+    Navigator.pop(context);
   }
 
   String? timeValidator(String? value) {

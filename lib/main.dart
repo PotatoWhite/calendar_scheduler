@@ -1,28 +1,24 @@
-import 'package:calendar_scheduler/screen/home_sreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:provider/provider.dart';
 
-import 'database/drift_database.dart';
-import 'provider/schedule_provider.dart';
-import 'repository/schedule_repository.dart';
+import 'firebase_options.dart';
+import 'screen/home_sreen.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Firebase 초기화
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   await initializeDateFormatting();
 
-  //db init
-  final database = LocalDatabase();
-  GetIt.I.registerSingleton<LocalDatabase>(database);
-
-  final repository = ScheduleRepository();
-  final provider = ScheduleProvider(repository: repository);
-
-  runApp(ChangeNotifierProvider(
-    create: (_) => provider,
-    child: MaterialApp(
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: HomeScreen(),
     ),
-  ));
+  );
 }
